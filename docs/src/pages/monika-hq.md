@@ -33,13 +33,37 @@ Now Monika will regularly send reports to Monika-HQ. Then you can see the report
 
 # Features
 
-## Probe Management
+## Probes List
 
-- Show list of probes
+- Show list of probes from all Monika instances
+    - Filter by Monika instance
+    - Same Probe's URL is shown once. 
+    - Search by URL
+    - Shows the status of each probes (healthy or unhealthy)
+- Enable or disable a probe
 
-## Manage Monika API Keys
+## Probe's Status / Report
+
+- Show response time of the probe: average, slowest, fastest.
+- Uptime/Downtime in percentage.
+- Response time graph for the last two weeks. There is a dropdown to select which instance to display.
+- Latest failed checks: date, time, and the Monika instance
+- Change probe's request: URL, method, headers
+- Change probe's interval
+- Change probe's trueThreshold and falseThreshold
+
+## Monika API Keys
 
 - Create new key
 - Disable a key
 - Delete a key
 - Show list of keys: Instances of Monika that are using the key and when it was last used.
+
+## Monika Instances
+
+- Show list of connected Monika instances
+- Configure an instance of Monika:
+    - Update notification settings
+    - Add notification
+    - Remove/disable notification
+
