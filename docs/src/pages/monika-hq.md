@@ -5,6 +5,8 @@ title: Monika-HQ
 
 `monika-hq` is a web app to manage multiple instances of Monika locally and remotely. 
 
+> To avoid confusion, please remember that Monika-HQ and Monika are different apps.
+
 ![](/monika/monika-hq.png)
 
 ## Getting started
@@ -109,7 +111,7 @@ When Monika is started with the `--hq-url` and `--hq-key` flags, it will
     }
     ```
 
-- monika-hq saves the received configuration and returns a unique string to identify as a new config's version string:
+- monika-hq saves the received configuration and returns a unique string as a new config's version string:
 
     ```json
     {
@@ -124,7 +126,7 @@ When Monika is started with the `--hq-url` and `--hq-key` flags, it will
 
 ### Report Flow
 
-When Monika is started with the `--hq-url` and `--hq-key` flags, it will regularly (default every 3 minutes) perform the Report Flow as follows
+When Monika is started with the "monika-hq" key in the config.json, it will regularly (default every 3 minutes) perform the Report Flow as follows
 
 - create an archive of the data since last report 
 - calls `<MONIKA_HQ_URL>/api/report` end point with 
@@ -177,6 +179,8 @@ When Monika is started with the `--hq-url` and `--hq-key` flags, it will regular
     ```
 
 - Monika then will update its own configuration if needed.
+
+![](/monika/monika-hq-how-it-works.png)
 
 ### On Incident/Recovery
 
