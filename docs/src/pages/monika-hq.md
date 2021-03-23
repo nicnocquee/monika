@@ -24,7 +24,7 @@ Next, we need to run Monika with the `monika-hq`'s URL and the generated key as 
     ```json
     {
         "monika-hq": {
-            "url": "MONIT_HQ_URL",
+            "url": "MONIKA_HQ_URL",
             "key": "GENERATED_KEY"
         }
     }
@@ -50,7 +50,8 @@ Now Monika will regularly send reports to Monika-HQ. Then you can see the report
 - Show response time of the probe: average, slowest, fastest.
 - Uptime/Downtime in percentage.
 - Response time graph for the last two weeks. There is a dropdown to select which instance to display.
-- Latest failed checks: date, time, and the Monika instance
+- Latest failed checks: date, time, duration, and the Monika instance
+- Sent notifications list.
 - Change probe's request: URL, method, headers
 - Change probe's interval
 - Change probe's trueThreshold and falseThreshold
@@ -79,7 +80,9 @@ Now Monika will regularly send reports to Monika-HQ. Then you can see the report
 
 ### Handshake
 
-When Monika is started with the `--hq-url` and `--hq-key` flags, it will 
+> This sections is a proposal on how to implement Monika-HQ. It won't be shown in the Monika's doc.
+
+When Monika is started with the "monika-hq" key in the config.json, it will 
 
 - call `<MONIKA_HQ_URL>/api/handshake` end point with
 
@@ -122,7 +125,7 @@ When Monika is started with the `--hq-url` and `--hq-key` flags, it will
     }
     ```
 
-- monika keeps this version string around and send it to monika-hq when it perfoms the Report Flow as explained below.
+- monika keeps this version string around and send it to monika-hq when it performs the Report Flow as explained below.
 
 ### Report Flow
 
