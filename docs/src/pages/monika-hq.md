@@ -184,7 +184,7 @@ When Monika is started with the "monika-hq" key in the config.json, it will regu
 
 ### On Incident/Recovery
 
-When an incident occurs, e.g., `status-not-2xx` is triggered 5 times (or the threshhold) in a row, and Monika is started with the `--hq-url` and `--hq-key` flags, Monika will call the `<MONIKA_HQ_URL>/api/report` end point just like how it goes in the regular report cycle.
+When an incident occurs, e.g., `status-not-2xx` is triggered 5 times (or the threshhold) in a row, and Monika is started with the "monika-hq" key in the config.json, Monika will call the `<MONIKA_HQ_URL>/api/report` end point just like how it goes in the regular report cycle.
 
 Same goes when a probe recovers from incident.
 
