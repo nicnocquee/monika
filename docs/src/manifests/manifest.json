@@ -41,6 +41,17 @@
           "editUrl": "/guides/alerts.md"
         }
       ]
+    },
+    {
+      "title": "Monika-HQ",
+      "heading": true,
+      "routes": [
+        {
+          "title": "Overview",
+          "path": "/monika-hq",
+          "editUrl": "/monika-hq.md"
+        }
+      ]
     }
   ]
 }
