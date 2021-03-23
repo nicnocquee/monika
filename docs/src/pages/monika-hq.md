@@ -12,7 +12,8 @@ title: Monika-HQ
 1. Install monika-hq: `npm i -g @hyperjumptech/monika-hq`
 2. Run in port 8080: `monika-hq -p 8080`
 3. Open browser and go to http://<IP_OF_MONIKA_HQ>:8080
-4. Create a Monika API Key. Provide a `name` and then click `Generate`.
+4. If first time, ask for email and password.
+5. Create a Monika API Key. Provide a `name` and then click `Generate`.
 
 Next, we need to run Monika with the `monika-hq`'s URL and the generated key as follows.
 
@@ -67,14 +68,66 @@ Now Monika will regularly send reports to Monika-HQ. Then you can see the report
     - Add notification
     - Remove/disable notification
 
+### User management
+
+- Add or remove user that can access monika-hq.
+- Change email or password of user.
+
 ## How it works
+
+### Handshake
+
+When Monika is started with the `--hq-url` and `--hq-key` flags, it will 
+
+- call `<MONIKA_HQ_URL>/api/handshake` end point with
+
+    - HTTP method: POST
+    - Body:
+
+    ```json
+    {
+        "monika": {
+            "id": "some_uuid",
+            "ip_address": "this-instance-ip"
+        },
+        "data": {
+            "probes": [
+                // probes
+            ],
+            "notifications": [
+                // notifications
+            ]
+        }
+    }
+    ```
+
+    - Header:
+
+    ```
+    headers: {
+        Authorization: Bearer <API_KEY>
+    }
+    ```
+
+- monika-hq saves the received configuration and returns a unique string to identify as a new config's version string:
+
+    ```json
+    {
+        "result": "ok",
+        "data": {
+            "config-version": "some string"
+        }
+    }
+    ```
+
+- monika keeps this version string around and send it to monika-hq when it perfoms the Report Flow as explained below.
 
 ### Report Flow
 
-When Monika is started with the `--hq-url` and `--hq-key` flags, it will regularly do the Report Flow as follows
+When Monika is started with the `--hq-url` and `--hq-key` flags, it will regularly (default every 3 minutes) perform the Report Flow as follows
 
 - create an archive of the data since last report 
-- calls `<MONIKA_HQ_URL>/api/report` end point regularly (default every 3 minutes) with 
+- calls `<MONIKA_HQ_URL>/api/report` end point with 
 
     - HTTP method: POST
     - Content type: `multipart/form-data`
@@ -85,16 +138,11 @@ When Monika is started with the `--hq-url` and `--hq-key` flags, it will regular
         "monika": {
             "id": "some_uuid",
             "ip_address": "this-instance-ip",
+            "config-version": "version-string"
         },
-        "notifications": {
-            // this monika's notification config
-        },
-        "probes": [
-            // this monika's probes
-        ],
     }
     ```
-    - Attachments: the events data
+    - Attachments: archive of the events data
     - Header:
 
     ```
@@ -103,7 +151,7 @@ When Monika is started with the `--hq-url` and `--hq-key` flags, it will regular
     }
     ```
 
-- monika-hq sends response
+- monika-hq saves the events data to database then compares the received configuration's version. If the config's version is the same, monika-hq sends the following response
 
     ```json
     {
@@ -111,14 +159,13 @@ When Monika is started with the `--hq-url` and `--hq-key` flags, it will regular
     }
     ```
 
-    when configuration that is saved in monika-hq is the same with the one sent by the Monika instance.
-
     If the configuration is different (user has changed say URL, notifications, etc from the Monika-HQ web app), it will send a response:
 
     ```json
     {
         "result": "updated",
         "data": {
+            "config-version": "new-version",
             "probes": [
                 // new probes
             ],
@@ -136,3 +183,12 @@ When Monika is started with the `--hq-url` and `--hq-key` flags, it will regular
 When an incident occurs, e.g., `status-not-2xx` is triggered 5 times (or the threshhold) in a row, and Monika is started with the `--hq-url` and `--hq-key` flags, Monika will call the `<MONIKA_HQ_URL>/api/report` end point just like how it goes in the regular report cycle.
 
 Same goes when a probe recovers from incident.
+
+### Housekeeping
+
+Monika-hq regularly checks the saved Monika instances and automatically disables the instance that hasn't sent report data in the last 5 minutes. It may be because the instance is terminated in the remote server.
+
+When an instance is disabled,
+
+- the probes are removed from the dashboard.
+- send email to registered users.
